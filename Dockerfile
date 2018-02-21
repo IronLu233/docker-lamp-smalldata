@@ -2,21 +2,19 @@ FROM linode/lamp
 LABEL maintainer="lrironsora@gmail.com"
 
 RUN mv /var/www/example.com /var/www/ninechapter.com
+ADD config/autocomplete/ /var/www/ninechapter.com/public_html/
 WORKDIR /etc/apache2/
 ADD config/ninechapter.conf sites-available/
 RUN rm -rf sites-enabled/*
 RUN a2ensite ninechapter.conf
-WORKDIR /var/www/ninechapter.com
 CMD service mysql start && \
     service apache2 start && \
     /bin/bash
 
 RUN apt-get update && \
     apt-get install wget figlet -y
-RUN wget https://s3-us-west-2.amazonaws.com/jiuzhang-bigdata/autocomplete.tar
-RUN tar -xf autocomplete.tar && rm -rf autocomplete.tar
 
-EXPOSE 80 3306
+EXPOSE 80
 
 WORKDIR /root/
 ADD config/mysql.sql .
